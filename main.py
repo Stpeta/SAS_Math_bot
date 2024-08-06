@@ -9,6 +9,8 @@ from anthropic import AsyncAnthropic
 
 from config_data.avatars import avatars
 from config_data.config import (Config, load_config)
+from keyboards.main_menu import set_main_menu
+from lexicon.lexicon_en import LEXICON
 
 # Set up logging
 logging.basicConfig(
@@ -86,6 +88,12 @@ async def cmd_start(message: types.Message):
     await message.reply("Welcome! Please select the person you'd like to talk to:", reply_markup=get_avatar_keyboard())
     logger.info(f"New chat started for user {user_id}")
 
+@dp.message(Command('help'))
+async def cmd_start(message: types.Message):
+    user_id = message.from_user.id
+    clear_chat_history(user_id)
+    await message.reply("This bot allows you to speak with a great mathematician. \n\n Author: @nedanaec")
+    logger.info(f"Command /help was sent by user {user_id}")
 
 @dp.callback_query(lambda c: c.data and c.data.startswith('avatar_'))
 async def process_avatar_selection(callback_query: types.CallbackQuery):
@@ -104,7 +112,7 @@ async def handle_message(message: types.Message):
     user_avatar = get_user_avatar(user_id)
 
     if not user_avatar:
-        await message.reply("Please select a person to talk to first by using the /start command.")
+        await message.reply("Please select a person to talk by using the /start command.")
         return
 
     # Add user message to database
@@ -117,7 +125,8 @@ async def handle_message(message: types.Message):
     dialogue_length = sum(len(msg[0]) for msg in history)
     if dialogue_length > MAX_DIALOGUE_LENGTH:
         clear_chat_history(user_id)
-        await message.reply("The conversation has reached its length limit. Starting a new conversation.")
+        await message.reply("The conversation has reached its length limit. Starting a new conversation with the same "
+                            "person.")
         logger.info(f"Dialogue limit reached for user {user_id}. Starting new conversation.")
         return
 
@@ -127,8 +136,8 @@ async def handle_message(message: types.Message):
     try:
         # Get response from Claude
         response = await anthropic_client.messages.create(
-            model="claude-3-haiku-20240307",
-            max_tokens=1000,
+            model=config.tg_bot.ai_model,
+            max_tokens=config.tg_bot.max_tokens,
             system=avatars[user_avatar],
             messages=claude_messages
         )
@@ -151,6 +160,7 @@ async def handle_message(message: types.Message):
 async def main():
     try:
         logger.info("Starting bot")
+        await set_main_menu(bot)
         await dp.start_polling(bot)
     finally:
         await bot.session.close()

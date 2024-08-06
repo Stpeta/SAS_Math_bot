@@ -9,6 +9,8 @@ class TgBot:
     admin_ids: list[int]  # lists of administrators id
     anthropic_api_key: str  # api key for anthropic.ai
     max_dialogue_length: int
+    ai_model: str
+    max_tokens: int
 
 
 @dataclass
@@ -26,6 +28,8 @@ def load_config(path: str | None = None) -> Config:
             token=env('BOT_TOKEN'),
             admin_ids=list(map(int, env.list('ADMIN_IDS'))),
             anthropic_api_key=env('ANTHROPIC_API_KEY'),
-            max_dialogue_length=10000
+            max_dialogue_length=10000,
+            ai_model='claude-3-haiku-20240307',
+            max_tokens=1000
         )
     )

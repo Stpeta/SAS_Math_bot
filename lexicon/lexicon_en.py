@@ -1,12 +1,9 @@
 LEXICON: dict[str, str] = {
-    '/start': 'Here\'s your first owl!'
-              '\n\nYou\'ll be receiving owls everyday at ',
-    '/help': 'This bot sends you an owl a day.'
-             '\n\nTo stop receiving owls — send /stop'
-             '\n\nTo start receiving owls — send /start'
+    '/start': '',
+    '/help': 'This bot allows you to speak with a great mathematician. \n\n Author: @nedanaec'
 }
 
 LEXICON_COMMANDS: dict[str, str] = {
-    '/start': 'Start sending owls',
+    '/start': 'Start new conversation',
     '/help': 'Help'
 }

@@ -28,7 +28,7 @@ def load_config(path: str | None = None) -> Config:
             token=env('BOT_TOKEN'),
             admin_ids=list(map(int, env.list('ADMIN_IDS'))),
             anthropic_api_key=env('ANTHROPIC_API_KEY'),
-            max_dialogue_length=10000,
+            max_dialogue_length=20000,
             ai_model='claude-3-haiku-20240307',
             max_tokens=1000
         )

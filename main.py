@@ -10,7 +10,6 @@ from anthropic import AsyncAnthropic
 from config_data.avatars import avatars
 from config_data.config import (Config, load_config)
 from keyboards.main_menu import set_main_menu
-from lexicon.lexicon_en import LEXICON
 
 # Set up logging
 logging.basicConfig(
@@ -88,12 +87,14 @@ async def cmd_start(message: types.Message):
     await message.reply("Welcome! Please select the person you'd like to talk to:", reply_markup=get_avatar_keyboard())
     logger.info(f"New chat started for user {user_id}")
 
+
 @dp.message(Command('help'))
 async def cmd_start(message: types.Message):
     user_id = message.from_user.id
     clear_chat_history(user_id)
     await message.reply("This bot allows you to speak with a great mathematician. \n\n Author: @nedanaec")
     logger.info(f"Command /help was sent by user {user_id}")
+
 
 @dp.callback_query(lambda c: c.data and c.data.startswith('avatar_'))
 async def process_avatar_selection(callback_query: types.CallbackQuery):

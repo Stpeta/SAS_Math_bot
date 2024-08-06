@@ -88,12 +88,13 @@ async def cmd_start(message: types.Message):
     logger.info(f"New chat started for user {user_id}")
 
 
-@dp.message(Command('help'))
+@dp.message(Command('about'))
 async def cmd_start(message: types.Message):
     user_id = message.from_user.id
     clear_chat_history(user_id)
-    await message.reply("This bot allows you to speak with a great mathematician. \n\n Author: @nedanaec")
-    logger.info(f"Command /help was sent by user {user_id}")
+    await message.reply("This bot was created for my students at SAS. It allows you to speak with a great "
+                        "mathematician. Powered by Claude AI. \n\n Author: @nedanaec")
+    logger.info(f"Command /about was sent by user {user_id}")
 
 
 @dp.callback_query(lambda c: c.data and c.data.startswith('avatar_'))

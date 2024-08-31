@@ -84,7 +84,7 @@ def get_avatar_keyboard():
 async def cmd_start(message: types.Message):
     user_id = message.from_user.id
     clear_chat_history(user_id)
-    await message.reply("Welcome! Please select the person you'd like to talk to:", reply_markup=get_avatar_keyboard())
+    await message.reply("Выберите ИИ-ассистента", reply_markup=get_avatar_keyboard())
     logger.info(f"New chat started for user {user_id}")
 
 
@@ -92,8 +92,7 @@ async def cmd_start(message: types.Message):
 async def cmd_start(message: types.Message):
     user_id = message.from_user.id
     clear_chat_history(user_id)
-    await message.reply("This bot was created for my students at SAS. It allows you to speak with a great "
-                        "mathematician. Powered by Claude AI. \n\n Author: @nedanaec")
+    await message.reply("ИИ-ассистент курса Управление проектами в ТюмГУ")
     logger.info(f"Command /about was sent by user {user_id}")
 
 
@@ -103,7 +102,7 @@ async def process_avatar_selection(callback_query: types.CallbackQuery):
     selected_avatar = callback_query.data.split('_')[1]
     set_user_avatar(user_id, selected_avatar)
     await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(user_id, f"You've selected to talk with {selected_avatar}.")
+    await bot.send_message(user_id, f"Вы выбрали: {selected_avatar}.")
     logger.info(f"User {user_id} selected avatar: {selected_avatar}")
 
 
@@ -114,7 +113,7 @@ async def handle_message(message: types.Message):
     user_avatar = get_user_avatar(user_id)
 
     if not user_avatar:
-        await message.reply("Please select a person to talk by using the /start command.")
+        await message.reply("Выберите ИИ-ассистента командой /start")
         return
 
     # Add user message to database
@@ -127,8 +126,7 @@ async def handle_message(message: types.Message):
     dialogue_length = sum(len(msg[0]) for msg in history)
     if dialogue_length > MAX_DIALOGUE_LENGTH:
         clear_chat_history(user_id)
-        await message.reply("The conversation has reached its length limit. Starting a new conversation with the same "
-                            "person.")
+        await message.reply("Диалог достиг максимальной длины. Начните новый диалог.")
         logger.info(f"Dialogue limit reached for user {user_id}. Starting new conversation.")
         return
 
@@ -156,7 +154,7 @@ async def handle_message(message: types.Message):
     except Exception as e:
         logger.error(f"Error processing message for user {user_id}: {str(e)}")
         await message.reply(
-            "I'm sorry, but I encountered an error while processing your message. Please try again later.")
+            "Произошла неизвестная ошибка. Пожалуйста, попробуйте позже.")
 
 
 async def main():
